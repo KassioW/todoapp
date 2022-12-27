@@ -1,43 +1,61 @@
-// Este é o array que vai os itens a fazer (TODO)
-let todoItems = [];
+import React, { useState, useEffect } from "react";
+import { View, StyleSheet } from 'react-native';
+import { Text, Input, Button } from 'react-native-elements';
+import { StatusBar } from 'expo-status-bar';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
-// Esta função vai criar um novo objeto tarefa(ToDo) baseado no
-// texto que foi digitado no input text , e adiciona-lo dentro
-// do array `todoItems` 
-function addTodo(text) {
-    const todo = {
-        text,
-        checked: false,
-        id: Date.now(),
-    };
+
+export default function App() {
+
+  const [email, setEmail] = useState(null);
+  const [password, setPassword] = useState(null)
+
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: '#fff',
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+  });
   
-  todoItems.push(todo);
-  console.log(todoItems);
+  
+  const entrar = () => {
+  console.log("entrou")
+  console.log(email)
+  console.log(password)
+ }
+ 
+ return (
+
+    <View style={styles.container}>
+      <Text h3>entre nesta porra</Text>
+      <Input
+        placeholder="E-mail"
+        leftIcon={{ type: 'font-awesome', name: 'envelope' }}
+        style={styles}
+        onChangeText={value => setEmail(value)} 
+        keyboardType="email-adress"
+        />
+        <Input
+        placeholder="Sua Senha"
+        leftIcon={{ type: 'font-awesome', name: 'key' }}
+        style={styles}
+        onChangeText={value => setPassword(value)} 
+        secureTextEntry={true}
+        />
+      <Button
+      icon={
+        <Icon
+        name="check"
+        size={15}
+        color="white"
+  />
+      }
+      title="Entrar"
+      onPress={() => entrar()}
+  />
+    </View>
+  );
 }
 
-  // Seleciona o elemento form
-const form = document.querySelector('.js-form');
-// Add o submit event listener
-form.addEventListener('submit', event => {
-  // evitar submissão com refresh
-  event.preventDefault();
-  // seleciona o input text
-  const input = document.querySelector('.js-todo-input');
-
-  // Pega o valor do input e remove espaços em branco
-  const text = input.value.trim();
-  if (text !== '') {
-    addTodo(text);
-    input.value = '';
-    input.focus();
-  }
-});
-
-const todo = {
-    text,
-    checked: false,
-    id: Date.now(),
-  };
-
-  todoItems.push(todo);
-console.log(todoItems);
