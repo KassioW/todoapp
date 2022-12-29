@@ -3,59 +3,28 @@ import { View, StyleSheet } from 'react-native';
 import { Text, Input, Button } from 'react-native-elements';
 import { StatusBar } from 'expo-status-bar';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { createStackNavigator } from '@react-navigation/stack';
+import { NavigationContainer } from '@react-navigation/native';
+import Login from './screens/Login';
+import Principal from './screens/Principal';
 
+const Stack = createStackNavigator();
 
-export default function App() {
-
-  const [email, setEmail] = useState(null);
-  const [password, setPassword] = useState(null)
-
-  const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: '#fff',
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-  });
-  
-  
-  const entrar = () => {
-  console.log("entrou")
-  console.log(email)
-  console.log(password)
- }
- 
- return (
-
-    <View style={styles.container}>
-      <Text h3>entre nesta porra</Text>
-      <Input
-        placeholder="E-mail"
-        leftIcon={{ type: 'font-awesome', name: 'envelope' }}
-        style={styles}
-        onChangeText={value => setEmail(value)} 
-        keyboardType="email-adress"
-        />
-        <Input
-        placeholder="Sua Senha"
-        leftIcon={{ type: 'font-awesome', name: 'key' }}
-        style={styles}
-        onChangeText={value => setPassword(value)} 
-        secureTextEntry={true}
-        />
-      <Button
-      icon={
-        <Icon
-        name="check"
-        size={15}
-        color="white"
-  />
-      }
-      title="Entrar"
-      onPress={() => entrar()}
-  />
-    </View>
+function MyStack() {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen name="Login" component={Login} />
+      <Stack.Screen name="Principal" component={Principal} />
+    </Stack.Navigator>
   );
 }
 
+
+export default function App() {
+  return (
+    <NavigationContainer>
+      <MyStack />
+    </NavigationContainer>
+  );
+}
+ 
