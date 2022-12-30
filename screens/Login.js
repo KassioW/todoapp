@@ -20,6 +20,10 @@ export default function Login({navigation}) {
     console.log(email)
     console.log(password)
    }
+
+   const cadastrar = () => {
+    navigation.navigate("Cadastro")
+   }
    
    return (
   
@@ -50,6 +54,18 @@ export default function Login({navigation}) {
         title="Entrar"
         onPress={() => entrar()}
     />
+     <Button
+        icon={
+          <Icon
+          name="user"
+          size={15}
+          color="white"
+    />
+        }
+        title="Cadastrar"
+        buttonStyle= {specificStyle.button}
+        onPress={() => cadastrar()}
+    />
       </View>
     );
   }
@@ -57,5 +73,9 @@ export default function Login({navigation}) {
   const specificStyle = StyleSheet.create({
     specificContainer: {
       backgroundColor: "#fff",
-    }
+    },
+    button: {
+        width: '100%',
+        marginTop: 10
+    },
   })
