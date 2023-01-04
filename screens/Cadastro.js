@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
-import {  View, StyleSheet } from 'react-native';
+import {  View, StyleSheet, Platform } from 'react-native';
 import { Text, Input, Button, CheckBox } from 'react-native-elements';
 import { StatusBar } from 'expo-status-bar';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import styles from '../style/mainStyle';
 import { TextInputMask,  } from "react-native-masked-text";
 import { KeyboardAvoidingView, ScrollView } from "react-native-web";
+import usuarioService from "../services/UsuarioService";
 
 
 export default function Cadastro({navigation}) {
@@ -13,12 +14,15 @@ export default function Cadastro({navigation}) {
     const [email, setEmail] = useState(null);
     const [nome, setNome] = useState(null)
     const [cpf, setCpf] = useState(null)
+    const [senha, setSenha] = useState(null)
     const [telefone, setTelefone] = useState(null)
     const [isSelected, setSelected] = useState(false)
     const [errorEmail, setErrorEmail] = useState(null)
     const [errorNome, setErrorNome] = useState(null)
     const [errorCpf, setErrorCpf] = useState(null)
+    const [errorSenha, setErrorSenha] = useState(null)
     const [errorTelefone, setErrorTelefone] = useState(null)
+    const [isLoading, setLoading] = useState(false)
 
     let cpfField = null
     let telefoneField = null
@@ -30,6 +34,7 @@ export default function Cadastro({navigation}) {
       let error = false
       setErrorEmail(null)
       setErrorCpf(null) 
+      setErrorSenha(null)
    
       
       const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
@@ -47,12 +52,34 @@ export default function Cadastro({navigation}) {
       setErrorTelefone("Preencha seutelefoune direito fdp")
       error = true
   }
+  if (senha == null){
+    setErrorSenha("Preencha suasenha direito fdp")
+    error = true
+}
     return !error
   }
 
     const salvar = () => {
       if (validar()){
-      console.log("Salvou")
+        setLoading(true)
+
+      let data = {
+        email: email,
+        cpf: cpf,
+        nome: nome,
+        telefone: telefone,
+        senha: senha,
+      }
+      usuarioService.cadastrar(data)
+      .then((response) => {
+        setLoading(false)
+          console.log(response.data)
+      })
+      .catch((error)=> {
+        setLoading(false)
+        console.log(error)
+        console.log("Eroooou")
+      })
     }
   }
 
@@ -60,8 +87,9 @@ export default function Cadastro({navigation}) {
    return (
   
       <KeyboardAvoidingView 
+      behavior={Platform.OS == "android" ? "padding" : "height"}
       style={[styles.container, specificStyle.specificContainer]}
-       ketboardVerticalOffset={20}>
+       ketboardVerticalOffset={80}>
        <ScrollView style={{widht: "100%"}}>
         <Text h3>Cadastre-se</Text>
         <Input
@@ -115,6 +143,13 @@ export default function Cadastro({navigation}) {
             </View>
             <Text style={styles.errorMessage}>{errorTelefone}</Text>
 
+            <Input
+          placeholder="Senha"
+          onChangeText={value => setSenha(value)} 
+          errorMessage={errorSenha}
+          secureTextEntry={true}
+          />
+
           <CheckBox 
               title="Eu aceito os termos de uso"
               checkedIcon="check"
@@ -124,7 +159,11 @@ export default function Cadastro({navigation}) {
               checked={isSelected}
               onPress={() => setSelected(!isSelected)}          
           />
-        
+
+          { isLoading &&
+            <Text>Carreganu..</Text>
+          }
+        { !isLoading &&
         <Button
         icon={
           <Icon
@@ -134,8 +173,10 @@ export default function Cadastro({navigation}) {
     />
         }
         title="Salvar"
+        buttonStyle={specificStyle.button}
         onPress={() => salvar()}
     />
+      }
     </ScrollView>
       </KeyboardAvoidingView>
     );
